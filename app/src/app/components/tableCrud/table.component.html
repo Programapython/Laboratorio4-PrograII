@@ -12,7 +12,7 @@
       ></button>
     </ng-template>
     <ng-template pTemplate="right">
-      <button
+      <!-- <button
         pButton
         pRipple
         label="Delete"
@@ -20,7 +20,7 @@
         class="p-button-danger"
         [disabled]="!selectedPerson" 
         (click)="deletePerson(selectedPerson)"
-      ></button>
+      ></button> -->
     </ng-template>
   </p-toolbar>
 
@@ -50,9 +50,7 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 3rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
+        <!-- <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th> -->
         <th pSortableColumn="id" style="min-width:15rem"> ID <p-sortIcon field="id"></p-sortIcon></th>
         <th pSortableColumn="dni"> DNI <p-sortIcon field="dni"></p-sortIcon></th>
         <th pSortableColumn="name"> NAME <p-sortIcon field="name"></p-sortIcon></th>
@@ -65,7 +63,7 @@
     
     <ng-template pTemplate="body" let-person>
       <tr class="p-selectable-row" >
-        <td><p-tableCheckbox [value]="person" ></p-tableCheckbox></td>
+        <!-- <td><p-tableCheckbox [value]="person"></p-tableCheckbox></td> -->
         <td>{{person._id}}</td>
         <td>{{person.dni}}</td>
         <td>{{person.name}}</td>
@@ -139,25 +137,28 @@
       >Dni is required.</small>
    </div>
 
-   <div class="p-formgrid p-grid">
-    <div class="p-field p-col">
-      <label for="age">AGE</label>
-      <p-inputNumber
-        id="age"
-        [(ngModel)]="selectedPerson.age"
-      ></p-inputNumber>
-    </div>
-    <div class="p-field p-col">
-      <label for="salary">SALARY</label>
-      <p-inputNumber
-        id="salary"
-        [(ngModel)]="selectedPerson.salary"
-        mode="currency"
-        currency="USD"
-        locale="en-US"
-      ></p-inputNumber>
-    </div>
-   </div>
+   <div class="p-field p-col">
+    <label for="age">AGE</label>
+    <input
+      type="number"
+      pInputText
+      id="age"
+      [(ngModel)]="selectedPerson.age"
+      required
+      autofocus
+    />
+  </div>
+
+  <div class="p-field p-col">
+    <label for="salary">SALARY</label>
+    <p-inputNumber
+      id="salary"
+      [(ngModel)]="selectedPerson.salary"
+      mode="currency"
+      currency="USD"
+      locale="en-US"
+    ></p-inputNumber>
+  </div>
  </ng-template>
 
  <ng-template pTemplate="footer">
