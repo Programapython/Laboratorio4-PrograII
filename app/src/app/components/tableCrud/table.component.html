@@ -1,0 +1,174 @@
+
+<div class="card">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button
+        pButton
+        pRipple
+        label="New person"
+        icon="pi pi-plus"
+        class="p-button-success p-mr-2"
+        (click)="openNew()"
+      ></button>
+    </ng-template>
+    <ng-template pTemplate="right">
+      <button
+        pButton
+        pRipple
+        label="Delete"
+        icon="pi pi-trash"
+        class="p-button-danger"
+        [disabled]="!selectedPerson" 
+      ></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table 
+    #dt 
+    [value]="persons" 
+    [rows]="10" 
+    [paginator]="true" 
+    [globalFilterFields]="['dni','name','surname','age','salary']" 
+    [tableStyle]="{'min-width': '75rem'}"
+    [(selection)]="selectedPerson" 
+    [rowHover]="true" dataKey="id"
+    styleClass="p-datatable-gridlines"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <h3 class="m-0">Lista de Clientes</h3>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" 
+          (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Search..."  class="p-column-filter"/>
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="id" style="min-width:15rem"> ID <p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="dni"> DNI <p-sortIcon field="dni"></p-sortIcon></th>
+        <th pSortableColumn="name"> NAME <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="surname" style="min-width:10rem"> SURNAME <p-sortIcon field="category"></p-sortIcon></th>
+        <th pSortableColumn="age"> AGE <p-sortIcon field="age"></p-sortIcon></th>
+        <th pSortableColumn="salary" style="min-width:10rem"> SALARY <p-sortIcon field="salary"></p-sortIcon></th>
+        <th pSortableColumn="settings" style="min-width:10rem"> SETTINGS </th>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="body" let-person let-index="rowIndex">
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="person"></p-tableCheckbox>
+        </td>
+        <td>{{index+1}}</td>
+        <td>{{person.dni}}</td>
+        <td>{{person.name}}</td>
+        <td>{{person.surname}}</td>
+        <td>{{person.age}}</td>
+        <td>{{person.salary | currency:'USD'}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">
+        In total there are {{persons ? persons.length : 0 }} persons.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<p-dialog
+ [(visible)]="personDialog"
+ [style]="{ width: '450px' }"
+ header="Add person"
+ [modal]="true"
+ styleClass="p-fluid"
+>
+ <ng-template pTemplate="content">
+   <div class="p-field">
+     <label for="name">NAME</label>
+     <input
+       type="text"
+       pInputText
+       id="name"
+       [(ngModel)]="person.name"
+       required
+       autofocus
+     />
+     <small class="p-invalid" *ngIf="submitted && !person.name"
+       >Name is required.</small
+     >
+   </div>
+
+   <div class="p-field">
+     <label for="surname">SURNAME</label>
+     <input
+       type="text"
+       pInputText
+       id="surname"
+       [(ngModel)]="person.surname"
+       required
+       autofocus
+     />
+     <small class="p-invalid" *ngIf="submitted && !person.surname"
+       >Surname is required.</small
+     >
+   </div>
+
+   <div class="p-field">
+    <label for="dni">DNI</label>
+    <input
+      type="number"
+      pInputText
+      id="dni"
+      [(ngModel)]="person.dni"
+      required
+      autofocus
+    />
+    <small class="p-invalid" *ngIf="submitted && !person.dni"
+      >Dni is required.</small
+    >
+  </div>
+
+  <div class="p-formgrid p-grid">
+    <div class="p-field p-col">
+      <label for="age">AGE</label>
+      <p-inputNumber
+        id="age"
+        [(ngModel)]="person.age"
+      ></p-inputNumber>
+    </div>
+    <div class="p-field p-col">
+      <label for="salary">SALARY</label>
+      <p-inputNumber
+        id="salary"
+        [(ngModel)]="person.salary"
+        mode="currency"
+        currency="USD"
+        locale="en-US"
+      ></p-inputNumber>
+    </div>
+  </div>
+ </ng-template>
+
+ <ng-template pTemplate="footer">
+    <span class="p-buttonset">
+      <button pButton type="button" label="Save" icon="pi pi-check"></button>
+      <button pButton type="button" label="Cancel" icon="pi pi-times" (click)="hideDialog()"></button>
+    </span>
+ </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
