@@ -38,24 +38,25 @@ export class TableComponent implements OnInit {
   
     ngOnInit(): void {
       this.getPersons()
+      this.clean()
+    }
+
+    destroy(){
+      this.selectedPerson={}
+      this.personDialog=false
+      this.getPersons()
     }
   
-    resetForm(form: NgForm){
-      if(form){
-        form.reset()
-      }
-    }
-  
-    addPerson(form: NgForm){
-      if(form.value._id){
-         this.personService.patchPersons(form.value)
-         .subscribe( res => {
-            this.resetForm(form)
-         })
-      } else {
-        this.personService.postPerson(form.value)
+    addPerson(form: Person){
+      if(form._id){
+        this.personService.patchPersons(form)
         .subscribe( res => {
-          this.resetForm(form)
+          this.destroy()
+        })
+      } else {
+        this.personService.postPerson(form)
+        .subscribe( res => {
+          this.destroy()
         })
       }
     }
@@ -70,27 +71,43 @@ export class TableComponent implements OnInit {
     editPerson(person: Person){
       this.selectedPerson = person
       console.log("editando")
+      this.submitted = false;
+      this.personDialog = true;
     }
+
     deletePerson(person: Person){
       if(confirm('Realmente desea borrar los datos?')){
         this.personService.deletePersons(person)
-        .subscribe(res => {
-        this.getPersons()
+        .subscribe( res => {
+          this.destroy()
         })
-        console.log("deleteando")
       }
     }
     openNew() {
-        this.person = {};
-        this.submitted = false;
-        this.personDialog = true;
+      this.submitted = false;
+      this.personDialog = true;
     }
 
     hideDialog() {
       this.personDialog = false;
       this.submitted = false;
-  }
+      this.selectedPerson={}
+    }
+    
+    savePerson(){
+      this.submitted = true;
+      this.personDialog = true;
+    }
+    
+    clean(){
+      if (this.personDialog == false){
+        this.submitted = false
+      }
+    }
+
+    
 }
+
 
 
 
