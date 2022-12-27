@@ -9,7 +9,7 @@ import { Person } from '../models/person.model';
   providedIn: 'root'
 })
 export class PersonService {
-  readonly URL_API = 'http://localhost:5000/person'
+  readonly URL_API = 'http://localhost:5000/persons'
 
   constructor(private http: HttpClient) { }
 
