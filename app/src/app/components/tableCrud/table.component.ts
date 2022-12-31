@@ -84,6 +84,7 @@ export class TableComponent implements OnInit {
       }
     }
     openNew() {
+      this.selectedPerson={}
       this.submitted = false;
       this.personDialog = true;
     }
