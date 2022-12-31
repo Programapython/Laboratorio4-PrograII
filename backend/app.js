@@ -5,7 +5,7 @@ const colors = require('colors')
 const app = express()
 app.use(express.json())
 
-const Users = require('./models/users')
+const Persons = require('/person')
 const { json } = require('express')
 
 const DB_USER = "test2"
@@ -14,29 +14,25 @@ const COLLECTION = "LaboratorioII"
 
 app.use(express.json())
 
-app.get('/', (req,res) =>{
-  res.send('<h1>Bienvenido</h1><h2>Esta es la página de inicio</h2><a href="/users">Ver usuarios<a>')
-})
-
 //READ_1
-app.get('/users', async (req,res) =>{
+app.get('/person', async (req,res) =>{
   try {
-      const Usuario = await Users.find()
-      if (!Usuario || Usuario == ""){
+      const Persona = await Persons.find()
+      if (! Persona ||  Persona == ""){
         return res.status(200).json({mesage: 'No hay datos para mostrar'})
       }
-      res.status(200).json(Usuario)
+      res.status(200).json( Persona)
   }  catch (error) {
       res.status(500).json({ error:error})
   }
 })
 
 //READ_2
-app.get('/users/:id', async(req,res) =>{
+app.get('/person/:id', async(req,res) =>{
   //console.log(req)
   const id = req.params.id //extraer id del dato
   try {
-      const user = await Users.findOne({_id: id})
+      const person = await Persons.findOne({_id: id})
       if(!user){
         res.status(422).json({mesage: "User not found"})
         return
@@ -48,9 +44,9 @@ app.get('/users/:id', async(req,res) =>{
 }) 
 
 //POST
-app.post('/users',async (req, res)=> {
+app.post('/person',async (req, res)=> {
   try {
-    const {dni,name, surname, nameUser, gender, age, salary, job} = req.body
+    const {dni,name, surname, age, salary} = req.body
     if(!dni || !name || !surname){
       res.status(422).json({error: 'El DNI, Nombre y Apellidos son datos obligatorio'})
     }
@@ -58,13 +54,10 @@ app.post('/users',async (req, res)=> {
       dni,
       name,
       surname,
-      nameUser,
-      gender,
       age,
-      salary,
-      job
+      salary
     }
-    await Users.create(user)
+    await Persons.create(person)
     res.status(201).json({message: 'persona definida'})
   } catch (error) {
     res.status(500).json({error:error})
@@ -73,7 +66,7 @@ app.post('/users',async (req, res)=> {
 
 //UPDATE
 
-app.patch('/users/:id', async (req, res) => {
+app.patch('/person/:id', async (req, res) => {
   const id = req.params.id
   const {name, surname, nameUser, gender, age, salary, job} = req.body
   const newData = {
@@ -101,15 +94,15 @@ app.patch('/users/:id', async (req, res) => {
 
 //DELETE
 
-app.delete('/users/:id', async (req, res) => {
+app.delete('/person/:id', async (req, res) => {
     const id = req.params.id
     try {
-      const user = await Users.findOne({ _id: id })
+      const user = await Persons.findOne({ _id: id })
       if(!user){ //validación antes de remover
         res.status(422).json({mesage: "User not found"})
         return
         }
-      await Users.deleteOne({ _id: id })
+      await Persons.deleteOne({ _id: id })
       res.status(200).json({ message: 'Usuario removido'})
       
     } catch (error) {
